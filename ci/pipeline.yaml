@@ -1,9 +1,21 @@
+resource_types:
+  - name: helm
+    type: docker-image
+    source:
+      repository: linkyard/concourse-helm-resource
+  - name: kube-authenticator
+    type: docker-image
+    source:
+      repository: 7imbrook/kube_authenticate
+
 resources:
   - name: client-auth
     type: git
     icon: github-circle
     source:
       uri: https://github.com/timbrook-life/client-auth.git
+      exclude_paths:
+        - values.yaml
   - name: client-auth-deployment
     type: git
     icon: github-circle
@@ -17,6 +29,17 @@ resources:
       username: ((docker.username))
       password: ((docker.password))
       repository: 7imbrook/auth
+  - name: auth
+    type: kube-authenticator
+    icon: lock-outline
+    source:
+      token: ((digital_ocean.token))
+  - name: helm-release
+    type: helm
+    source:
+      repos:
+        - name: personal
+          url: https://helm-charts.sfo2.digitaloceanspaces.com
 
 jobs:
   - name: Test
@@ -47,10 +70,28 @@ jobs:
         params:
           build: client-auth
         get_params: { skip_download: true }
-  - name: Canary
+  - name: Push
     serial: true
     plan:
       - get: client-auth-deployment
+        trigger: true
+        params:
+          skip_download: true
       - get: client-auth-image
+        trigger: true
         passed:
           - Package
+      - get: auth
+      - put: helm-release
+        params:
+          release: auth-server
+          kubeconfig_path: auth/config.yaml
+          chart: personal/appshell
+          version: 1.1.3
+          namespace: production
+          values: client-auth-deployment/values.yaml
+          show_diff: true
+          override_values:
+            - key: image.sha
+              path: client-auth-image/digest
+              type: string

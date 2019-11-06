@@ -19,7 +19,7 @@ consul {
 #
 
 template {
-    destination = "./server/api/configuration/config.json"
+    destination = "./dist/api/configuration/config.json"
     source = "./conf/templates/config.json"
     error_on_missing_key = true
     left_delimiter  = "(("
