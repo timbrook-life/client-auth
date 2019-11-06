@@ -1,0 +1,39 @@
+openapi: 3.0.1
+info:
+  title: client_auth
+  description: Client Auth
+  version: 1.0.0
+servers:
+  - url: /api/v1
+tags:
+  - name: Examples
+    description: Simple example endpoints
+  - name: Specification
+    description: The swagger API specification
+paths:
+  /login:
+    post:
+      tags:
+        - Auth
+      description: Login with google oauth2
+      requestBody:
+        description: login....
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoogleAuth"
+        required: true
+      responses:
+        200:
+          description: Returns a JWT for service auth
+components:
+  schemas:
+    GoogleAuth:
+      title: auth
+      required:
+        - token
+      type: object
+      properties:
+        token:
+          type: string
+          example: google_token
