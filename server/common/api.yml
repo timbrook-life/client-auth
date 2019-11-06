@@ -26,6 +26,14 @@ paths:
       responses:
         200:
           description: Returns a JWT for service auth
+  /status:
+    get:
+      tags:
+        - Auth
+      description: App Status
+      responses:
+        200:
+          description: Ok
 components:
   schemas:
     GoogleAuth:
