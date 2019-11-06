@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+BASEDIR=$(dirname "$0")
+
+cd $BASEDIR
+
+fly -t ci set-pipeline -c ./pipeline.yaml --load-vars-from=./params.yaml -p "Auth API"

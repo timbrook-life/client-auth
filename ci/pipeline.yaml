@@ -1,0 +1,56 @@
+resources:
+  - name: client-auth
+    type: git
+    icon: github-circle
+    source:
+      uri: https://github.com/timbrook-life/client-auth.git
+  - name: client-auth-deployment
+    type: git
+    icon: github-circle
+    source:
+      uri: https://github.com/timbrook-life/client-auth.git
+      paths:
+        - values.yaml
+  - name: client-auth-image
+    type: docker-image
+    source:
+      username: ((docker.username))
+      password: ((docker.password))
+      repository: 7imbrook/auth
+
+jobs:
+  - name: Test
+    plan:
+      - get: client-auth
+        trigger: true
+      - task: test
+        config:
+          inputs:
+            - name: client-auth
+          platform: linux
+          image_resource:
+            type: registry-image
+            source: { repository: node, tag: 12-alpine }
+          run:
+            dir: client-auth
+            path: /bin/sh
+            args:
+              - -c
+              - |
+                yarn install
+                npm test
+  - name: Package
+    plan:
+      - get: client-auth
+        trigger: true
+      - put: client-auth-image
+        params:
+          build: client-auth
+        get_params: { skip_download: true }
+  - name: Canary
+    serial: true
+    plan:
+      - get: client-auth-deployment
+      - get: client-auth-image
+        passed:
+          - Package

@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+    repository: 7imbrook/auth
+    sha: sha256:72de5cab6ef6339871ec29d60e89db0f0cf96a53dbd1cdd88aaff2f5d53e1e77 
+
+healthEndpoint: "/api/v1/status"
+
+container:
+  port: 3000
+
+ingress:
+    enabled: true
+    hosts:
+        - timbrook.tech
+        - timbrook.dev
+        - timbrook.life
+    paths:
+        - /api/v1
+
+resources:
+  limits:
+   cpu: 80m
+   memory: 128Mi
+  requests:
+   cpu: 20m
+   memory: 56Mi
