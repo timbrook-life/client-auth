@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
     repository: 7imbrook/auth
-    sha: sha256:72de5cab6ef6339871ec29d60e89db0f0cf96a53dbd1cdd88aaff2f5d53e1e77 
+    sha: sha256:48b65d559a906f8f5c2621a733567ebbbb6ddf20576a38b5c7b195cabaab357e 
 
 healthEndpoint: "/api/v1/status"
 

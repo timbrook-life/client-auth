@@ -15,4 +15,11 @@ describe("LoginController", () => {
           .that.has.property("token")
           .equal("boop");
       }));
+
+  it("rejects invalid tokens", done => {
+    request(Server)
+      .post("/api/v1/login")
+      .send({ token: "invalid" })
+      .expect(401, done);
+  });
 });
