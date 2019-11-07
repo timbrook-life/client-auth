@@ -1,9 +1,13 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
-let data = {};
+interface Config {
+  readonly google: {
+    readonly clientid: string;
+  };
+}
 
 const conf = readFileSync(resolve(__dirname, "./config.json"));
-data = JSON.parse(conf.toString());
+const data: Config = JSON.parse(conf.toString());
 
 export default data;
