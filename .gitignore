@@ -1,4 +1,4 @@
 dist
 node_modules
 server/api/configuration/config.json
-jwk.json
+./jwk.json
