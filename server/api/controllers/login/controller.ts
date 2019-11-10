@@ -24,6 +24,11 @@ export class Controller {
           });
         }
 
+        // TODO: Check role mapping
+        if (email !== "timbrook480@gmail.com") {
+          return res.status(401).send();
+        }
+
         const token = JWT.sign(
           {
             email,
