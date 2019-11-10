@@ -1,9 +1,16 @@
 import { Request, Response } from "express";
 import config from "../../configuration/service";
-
+import { JWT, JWK } from "jose";
 import { OAuth2Client } from "google-auth-library";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 
 const verifier = new OAuth2Client(config.google.clientid);
+
+const conf = readFileSync(resolve("/var/run/secret/jwk.json"));
+const data = JSON.parse(conf.toString());
+const key = JWK.asKey(data);
+
 export class Controller {
   generateToken(req: Request, res: Response): void {
     const { token } = req.body;
@@ -16,11 +23,22 @@ export class Controller {
             msg: "email not verified"
           });
         }
-        // Gen JWT for postgrest with role for email
+
+        const token = JWT.sign(
+          {
+            email,
+            role: "doesnt:matter"
+          },
+          key,
+          {
+            audience: ["role"],
+            expiresIn: "1 minute"
+          }
+        );
+
         // yeah do that
         res.status(200).send({
-          email,
-          token: "no token yet"
+          token
         });
       })
       .catch(err => {

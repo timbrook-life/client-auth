@@ -26,6 +26,12 @@ template {
     right_delimiter = "))"
 }
 
+template {
+    destination = "/var/run/secret/jwk.json"
+    source = "./conf/templates/jwk.json"
+    error_on_missing_key = true
+}
+
 exec {
   command = "npm start"
   splay = "2s"

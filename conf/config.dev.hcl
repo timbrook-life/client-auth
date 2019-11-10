@@ -1,13 +1,11 @@
-# vault {
-#   address = "http://vault.core.svc.cluster.local:8200"
-#   ssl {
-#     # This is terrible practice, will fix
-#     enabled = false
-#     verify = false
-#   }
-#   vault_agent_token_file = "/var/run/secrets/.vault-token"
-#   renew_token = true
-# }
+vault {
+  address = "https://vault.timbrook.dev"
+  ssl {
+    enabled = true
+    verify = true
+  }
+  renew_token = false
+}
 
 consul {
   # Config this differently for dev?
@@ -24,6 +22,12 @@ template {
     error_on_missing_key = true
     left_delimiter  = "(("
     right_delimiter = "))"
+}
+
+template {
+    destination = "./jwk.json"
+    source = "./conf/templates/jwk.json"
+    error_on_missing_key = true
 }
 
 exec {
