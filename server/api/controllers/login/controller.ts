@@ -7,7 +7,7 @@ import { resolve } from "path";
 
 const verifier = new OAuth2Client(config.google.clientid);
 
-const conf = readFileSync(resolve("/var/run/secret/jwk.json"));
+const conf = readFileSync(resolve("/var/run/secrets/jwk.json"));
 const data = JSON.parse(conf.toString());
 const key = JWK.asKey(data);
 
@@ -32,12 +32,12 @@ export class Controller {
         const token = JWT.sign(
           {
             email,
-            role: "doesnt:matter"
+            role: "web_admin"
           },
           key,
           {
             audience: ["role"],
-            expiresIn: "1 minute"
+            expiresIn: "5 minute"
           }
         );
 

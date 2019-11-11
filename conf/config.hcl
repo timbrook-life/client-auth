@@ -27,7 +27,7 @@ template {
 }
 
 template {
-    destination = "/var/run/secret/jwk.json"
+    destination = "/var/run/secrets/jwk.json"
     source = "./conf/templates/jwk.json"
     error_on_missing_key = true
 }

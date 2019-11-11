@@ -8,8 +8,7 @@ vault {
 }
 
 consul {
-  # Config this differently for dev?
-  address = "http://localhost:8500"
+  address = "https://consul.timbrook.dev"
 }
 
 ###
@@ -25,7 +24,7 @@ template {
 }
 
 template {
-    destination = "./jwk.json"
+    destination = "/var/run/secrets/jwk.json"
     source = "./conf/templates/jwk.json"
     error_on_missing_key = true
 }
