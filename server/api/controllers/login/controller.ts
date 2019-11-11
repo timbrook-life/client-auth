@@ -4,8 +4,10 @@ import { JWT, JWK } from "jose";
 import { OAuth2Client } from "google-auth-library";
 import { readFileSync } from "fs";
 import { resolve } from "path";
+import { RoleBroker } from "../../service/roles/service";
 
 const verifier = new OAuth2Client(config.google.clientid);
+const roleBroker = new RoleBroker();
 
 const conf = readFileSync(resolve("/var/run/secrets/jwk.json"));
 const data = JSON.parse(conf.toString());
@@ -23,27 +25,10 @@ export class Controller {
             msg: "email not verified"
           });
         }
-
-        // TODO: Check role mapping
-        if (email !== "timbrook480@gmail.com") {
-          return res.status(401).send();
-        }
-
-        const token = JWT.sign(
-          {
-            email,
-            role: "web_admin"
-          },
-          key,
-          {
-            audience: ["role"],
-            expiresIn: "5 minute"
-          }
-        );
-
-        // yeah do that
-        res.status(200).send({
-          token
+        return roleBroker.generateToken(email).then(token => {
+          res.status(200).send({
+            token
+          });
         });
       })
       .catch(err => {
